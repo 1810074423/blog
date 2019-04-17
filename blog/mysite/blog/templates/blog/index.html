@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block right %}
+{% load staticfiles %}
+<div class="col-md-9">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2 class="panel-title">个人中心</h2>
+        </div>
+        <div class="panel-body">
+
+            <div class="row">
+                {% for article in articles %}
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img src="{% static 'img/header.jpg'%}" alt="...">
+                        <div class="caption" style="min-height: 210px">
+                            <h3><a href="{% url 'blog:article_detail' article.id %}">{{ article.title | truncatechars:15 }}</a>
+                            </h3>
+                            <p><a href="{% url 'blog:article_detail' article.id %}">{{ article.content | truncatechars:50 }}</a>
+                            </p>
+                            {% if request.session.login_user.id == article.author.id %}
+                            <p>
+                                <a onclick="return window.confirm('您确定要删除该这篇文章吗？');"
+                                   href="{% url 'blog:article_delete' article.id %}" class="btn btn-danger">删除</a>
+                                <a href="{% url 'blog:article_update' article.id %}" class="btn btn-warning">修改</a>
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty%}
+                <div>
+                    对不起，当前没有文章，
+                    <a href="{% url 'blog:article_add' %}">请添加文章</a>
+                </div>
+
+                {% endfor%}
+
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock%}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title%}
+    文章添加
+{% endblock%}
+
+
+{% block right%}
+<script src="/static/tiny_mce/tiny_mce.js"></script>
+<link rel="stylesheet" href="/static/ueditor/themes/default/css/ueditor.css">
+<div class="col-md-9">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2 class="panel-title">发表文章</h2>
+        </div>
+        <div class="panel-body">
+            <h4>{{msg}}</h4>
+            <form action="{% url 'blog:article_add' %}" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1">
+                        <input type="text" name="title" class="col-md-12 form-control" placeholder="文章标题">
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px;">
+                    <div class="col-md-10 col-md-offset-1">
+                        <textarea name="content" id="content" class="col-md-12 form-control" rows="20" ></textarea>
+                    </div>
+                </div>
+                <div class="row text-center"style="margin-top: 10px;">
+                    <button class="btn btn-success btn-lg">发表</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    tinyMCE.init({
+         "mode": 'textareas',
+         'theme': 'simple',
+        'theme': 'advanced',
+     });
+</script>
+{% endblock%}

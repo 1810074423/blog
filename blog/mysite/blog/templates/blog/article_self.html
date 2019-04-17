@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title%}
+    文章管理
+{% endblock%}
+
+
+{% block right%}
+<div class="col-md-9">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2 class="panel-title">我的文章</h2>
+        </div>
+        <div class="panel-body">
+            <h3>{{msg}}</h3>
+            <table class="table table-hover table-bordered table-striped">
+                <tr>
+                    <td>文章标识</td>
+                    <td>文章标题</td>
+                    <td>文章内容</td>
+                    <td>点击量</td>
+                    <td>作者</td>
+                    <td>操作</td>
+                </tr>
+              {#  {% for article in request.session.login_user.article_set.all %} #}
+                {% for article  in articles %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="{% url 'blog:article_detail' article.id %}">{{ article.title | truncatechars:15 }}</a></td>
+                    <td><a href="{% url 'blog:article_detail' article.id %}">{{ article.content | truncatechars:15 }}</a></td>
+                    <td>{{ article.count }}</td>
+                    <td><a href="{% url 'blog:show' article.author.id %}">{{ article.author.nickname }}</a></td>
+                    <td>
+                        <a onclick="return window.confirm('您确定要删除该这篇文章吗？');" href="{% url 'blog:article_delete' article.id %}" class="btn btn-danger">删除</a>
+                        <a href="{% url 'blog:article_update' article.id %}" class="btn btn-warning" >修改</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">对不起，当前没有用户， <a href="{% url 'blog:register' %}">请注册</a></td>
+                </tr>
+                {% endfor%}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock%}

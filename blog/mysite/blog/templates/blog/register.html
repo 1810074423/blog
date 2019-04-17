@@ -1,0 +1,76 @@
+{%extends 'base.html' %}
+{% block title %}
+    用户注册
+{% endblock %}
+{% block right %}
+<script>
+    $(function(){
+        $("#username").on("blur", function(){
+            let $username = $("#username").val()
+            if ($username.trim() == ""){
+            alter("用户名不能为空！！")
+            return;
+            }
+            $.ajax({
+                url: "/blog/check_user/",
+                data: {"username": $username},
+                type: "POST",
+                dataType: "json",
+                success: function(data){
+                    console.info(data)
+                    if (data.issuccess){
+                        $(".error_msg").html("<span style='color: green'>" + data.msg + "</span>")
+                        $("#submit").prop("disabled", false)
+                    } else {
+                        $(".error_msg").html("<span style='color: red'>" + data.msg + "</span>")
+                        $("#submit").prop("disabled", true)
+                    }
+                }
+            })
+        })
+    })
+</script>
+<div class="col-md-9">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2 class="panel-title">注册用户</h2>
+        </div>
+        <div class="panel-body">
+            <h4 class="text-center text-danger">{{msg}}</h4>
+            <form action="{% url 'blog:register' %}" method="post" class="form-horizontal">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username" class="col-sm-2 control-label">用户名称：</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="username" id="username" placeholder="请输入您的用户名">
+                    </div>
+                    <div class="col-md-3 error_msg">
+
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label for="username" class="col-sm-2 control-label">用户昵称：</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="nickname" id="nickname" placeholder="请输入您的昵称">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-2 control-label">用户密码：</label>
+                    <div class="col-sm-6">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="请输入您的密码">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password1" class="col-sm-2 control-label">确认密码：</label>
+                    <div class="col-sm-6">
+                        <input type="password" class="form-control" name="password1" id="password1" placeholder="请再次确认您的密码">
+                    </div>
+                </div>
+                <div class="text-center">
+                  <input type="submit" id="submit" value="注册" class="btn btn-danger" disabled>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

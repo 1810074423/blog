@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title%}
+    个人中心
+{% endblock%}
+
+
+{% block right%}
+<style>
+    #update {
+        display: none;
+    }
+</style>
+<script>
+    function change_msg(node) {
+        $("#info").toggle()
+        $("#update").toggle()
+    }
+
+    function more_avater() {
+        $(".tupian").after('<input  class="form-control" type="file" name="avatar" >')
+    }
+
+</script>
+
+<div class="col-md-9">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+                <h2 class="panel-title">个人中心</h2>
+        </div>
+        <div class="panel-body">
+            <div class="row text-right">
+                <button onclick="change_msg(this)" class="btn btn-primary">修改个人信息</button>
+            </div>
+            <table class="table table-hover table-bordered table-striped" id="info">
+                <tr>
+                    <td>用户名称</td>
+                    <td>{{ request.session.login_user.username }}</td>
+                </tr>
+                <tr>
+                    <td>用户头像</td>
+                    <td><img src="{{ request.session.login_user.avatar }}" alt="" style="height: 80px;width: 80px;border-radius: 50%"></td>
+                </tr>
+                <tr>
+                    <td>用户昵称</td>
+                    <td>{{ request.session.login_user.nickname }}</td>
+                </tr>
+                <tr>
+                    <td>用户性别</td>
+                    <td>{{ request.session.login_user.gender }}</td>
+                </tr>
+                <tr>
+                    <td>用户年龄</td>
+                    <td>{{request.session.login_user.age}}</td>
+                </tr>
+                <tr>
+                    <td>用户生日</td>
+                    <td>{{request.session.login_user.birthday}}</td>
+                </tr>
+                <tr>
+                    <td>最后登录时间</td>
+                    <td>{% firstof  request.session.login_user.last_login  '无' %}</td>
+                </tr>
+            </table>
+
+
+            <table class="table table-hover table-bordered table-striped" id="update">
+                <form action="{% url 'blog:user_update' request.session.login_user.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                    <tr>
+                        <td>用户名称</td>
+                        <td>{{ request.session.login_user.username }}</td>
+                    </tr>
+                    <tr>
+                        <td>用户头像</td>
+                        <td>
+                            <input class="form-control tupian" type="file" name="avatar" id="avatar">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>用户昵称</td>
+                        <td><input class="form-control" type="text" value="{{ request.session.login_user.nickname }}" name="nickname"></td>
+                    </tr>
+                    <tr>
+                        <td>用户性别</td>
+                        <td>
+                             {% if request.session.login_user.gender == '男' %}
+                                <input type="radio" checked value="男" name="gender"> 男
+                                <input  type="radio" value="女" name="gender"> 女
+                                {%  else %}
+                               <input  type="radio"  value="男" name="gender"> 男
+                               <input  type="radio" checked value="女" name="gender"> 女
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>用户年龄</td>
+                        <td><input class="form-control" type="number" name="age" value="{{request.session.login_user.age}}"></td>
+                    </tr>
+                    <tr>
+                        <td>用户生日</td>
+                        <td>{{request.session.login_user.birthday}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="text-center">
+                            <input class="btn btn-danger" type="submit" value="保存">
+                        </td>
+                    </tr>
+                </form>
+            </table>
+
+        </div>
+    </div>
+</div>
+{% endblock%}

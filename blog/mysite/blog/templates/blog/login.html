@@ -1,0 +1,57 @@
+{%extends 'base.html' %}
+{% block title %}
+    用户登录
+{% endblock %}
+{% block right %}
+<script>
+    function change_code() {
+        // $("#mycode").attr("src", "/blog/code/?id="+ Math.random())
+        $("#mycode").attr("src", "/blog/code/?id="+ new Date().getTime())
+    }
+
+</script>
+<div class="col-md-9">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2 class="panel-title">用户登录</h2>
+        </div>
+        <div class="panel-body">
+            <h4 class="text-center text-danger">{{msg}}</h4>
+            <form action="{% url 'blog:login' %}" method="post" class="form-horizontal">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username" class="col-sm-2 control-label">用户名称：</label>
+                    <div class="col-sm-9">
+                        <input type="text" autocomplete="off" class="form-control" name="username" id="username"
+                               placeholder="请输入您的用户名">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-2 control-label">用户密码：</label>
+                    <div class="col-sm-9">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="请输入您的密码">
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="code" class="col-sm-2 control-label">验证码：</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" autocomplete="off" name="code" id="code"
+                               placeholder="请输入正确的验证码">
+                    </div>
+                    <div class="col-sm-3">
+                        <a href="#" onclick="change_code()" title="换一换"><img id="mycode" src="{% url 'blog:code' %}"
+                                                                             alt="验证码"></a>
+                    </div>
+                    <div class="col-sm-3">
+                        <a href="#" onclick="change_code()" title="换一换">换一换</a>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <input type="submit" value="登录" class="btn btn-danger ">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
